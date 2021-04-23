@@ -13,6 +13,7 @@ mongoose
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   })
   .then((self) => {
     console.log(`Connected to the database: "${self.connection.name}"`);
@@ -42,8 +43,14 @@ mongoose
         })
     );
     Promise.all(promises).then(() => {
-      Recipe.findOneAndUpdate({ title: "Rigatoni alla Genovese" }, { duration: 100 }).then((ret) =>
-        console.log("Success")
+      Recipe.findOneAndUpdate(
+        { title: "Rigatoni alla Genovese" },
+        { duration: 100 },
+        { new: true }
+      ).then((ret) =>
+        console.log(
+          `Success document with _id: ${ret._id} and title: ${ret.title} have now duration set to ${ret.duration}`
+        )
       );
     });
   })
