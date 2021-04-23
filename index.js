@@ -18,41 +18,25 @@ mongoose
   .then(function (self) {
     console.log(`Connected to the database: "${self.connection.name}"`);
     // Before adding any recipes to the database, let's remove all existing ones
-    return Recipe.remove();
+    return Recipe.deleteMany();
   })
   .then(async function (ret) {
-    try {
-      let doc = await Recipe.create(data[0]);
-      console.log(doc.title);
-      let docs = await Recipe.insertMany(data, { bypassDocumentValidation: false });
-      docs.forEach((doc) => console.log(doc.title));
-    } catch (error) {
-      console.log(error);
-    }
-    // console.log(ret);
-    // return Recipe.create(data[0]);
-    // .then(function (ret) {
-    //   {
-    //     console.log(ret.title);
-    //     return ret;
-    //   }
-    // })
-    // .catch(function (err) {
-    //   console.log(err);
-    // });
+    // let doc = await Recipe.create(data[0]);
+    // console.log(doc.title);
+    let docs = await Recipe.insertMany(data, { bypassDocumentValidation: false });
+    docs.forEach((doc) => console.log(doc.title));
+    let docUpdate = await Recipe.findOneAndUpdate(
+      { title: "Rigatoni alla Genovese" },
+      { duration: 100 },
+      { new: true }
+    );
+    console.log(
+      `Success document with _id: ${docUpdate._id} and title: ${docUpdate.title} have now duration set to ${docUpdate.duration}`
+    );
+    await Recipe.deleteOne({ title: "Carrot Cake" });
+    console.log("Removing recipe with title 'Carrot Cake' !!! ");
+    mongoose.connection.close();
   })
-  // .then(function (ret) {
-  //   console.log(ret);
-  //   return Recipe.insertMany(data, { bypassDocumentValidation: false })
-  //     .then(function (docs) {
-  //       docs.forEach(function (doc) {
-  //         console.log(doc.title);
-  //       });
-  //     })
-  //     .catch(function (err) {
-  //       console.log(err);
-  //     });
-  // })
   .catch((error) => {
     console.error("Error connecting to the database", error);
   });
@@ -78,13 +62,5 @@ mongoose
 //       .catch((err) => console.log(err))
 //   );
 //   // docsFromInsertMany.forEach((doc) => console.log(doc.title));
-//   let docUpdate = await Recipe.findOneAndUpdate(
-//     { title: "Rigatoni alla Genovese" },
-//     { duration: 100 },
-//     { new: true }
-//   );
 
-//   console.log(
-//     `Success document with _id: ${docUpdate._id} and title: ${docUpdate.title} have now duration set to ${docUpdate.duration}`
-//   );
 // })
