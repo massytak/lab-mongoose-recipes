@@ -15,45 +15,58 @@ mongoose
     useUnifiedTopology: true,
     useFindAndModify: false,
   })
+  .catch((error) => {
+    console.error("Error connecting to the database", error);
+  })
   .then((self) => {
     console.log(`Connected to the database: "${self.connection.name}"`);
     // Before adding any documents to the database, let's delete all previous entries
     return self.connection.dropDatabase();
   })
   .then(() => {
-    // Run your code here, after you have insured that the connection was made
-    // data.forEach((element) => {
-    const promises = [];
-    promises.push(
-      Recipe.create(data[0])
-        .then((ret) => console.log(ret.title))
-        .catch((err) => console.log(err))
-    );
-    // });
-    promises.push(
-      Recipe.insertMany(data)
-        .then(function (docs) {
-          for (let i = 0; i < docs.length; i++) {
-            const element = docs[i];
-            console.log(element.title);
-          }
-        })
-        .catch(function (err) {
-          console.log(err);
-        })
-    );
-    Promise.all(promises).then(() => {
-      Recipe.findOneAndUpdate(
-        { title: "Rigatoni alla Genovese" },
-        { duration: 100 },
-        { new: true }
-      ).then((ret) =>
-        console.log(
-          `Success document with _id: ${ret._id} and title: ${ret.title} have now duration set to ${ret.duration}`
-        )
-      );
-    });
+    Recipe.create(data[0])
+      .then((ret) => console.log(ret.title))
+      .catch((err) => console.log(err));
   })
+  .then(() => {
+    Recipe.insertMany(data, { bypassDocumentValidation: false })
+      .then((docs) => {
+        docs.forEach((doc) => console.log(doc.title));
+      })
+      .catch((err) => console.log(err));
+  })
+  // .then(async (test) => {
+  //   // console.log(
+  //   //   // Run your code here, after you have insured that the connection was made
+  //   //   await Recipe.create(data[0]).then((ret) => {
+  //   //     console.log(ret.title);
+  //   //     return ret;
+  //   //   })
+  //   // );
+  //   // console.log(data.length);
+  //   // Toute les erreurs eventuel sont catcher par le catch en dessous
+  //   // let docsFromInsertMany =
+  //   console.log(
+  //     await Recipe.insertMany(data, {
+  //       bypassDocumentValidation: false,
+  //     })
+  //       .then((docs) => {
+  //         docs.forEach((doc) => console.log(doc.title));
+  //         return docs;
+  //       })
+  //       .catch((err) => console.log(err))
+  //   );
+  //   // docsFromInsertMany.forEach((doc) => console.log(doc.title));
+  //   let docUpdate = await Recipe.findOneAndUpdate(
+  //     { title: "Rigatoni alla Genovese" },
+  //     { duration: 100 },
+  //     { new: true }
+  //   );
+
+  //   console.log(
+  //     `Success document with _id: ${docUpdate._id} and title: ${docUpdate.title} have now duration set to ${docUpdate.duration}`
+  //   );
+  // })
   .catch((error) => {
-    console.error("Error connecting to the database", error);
+    console.error("OOps une erreur c'est produite => ", error);
   });
