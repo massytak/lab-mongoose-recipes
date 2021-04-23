@@ -35,7 +35,7 @@ mongoose
     );
     await Recipe.deleteOne({ title: "Carrot Cake" });
     console.log("Removing recipe with title 'Carrot Cake' !!! ");
-    mongoose.connection.close();
+    await mongoose.connection.close();
   })
   .catch((error) => {
     console.error("Error connecting to the database", error);
