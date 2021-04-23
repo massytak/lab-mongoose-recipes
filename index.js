@@ -18,17 +18,16 @@ mongoose
   .then(function (self) {
     console.log(`Connected to the database: "${self.connection.name}"`);
     // Before adding any recipes to the database, let's remove all existing ones
-    return Recipe.remove()
+    return Recipe.remove();
   })
   .then(async function (ret) {
     try {
-      await Recipe.create(data[0]);
+      let doc = await Recipe.create(data[0]);
       console.log(doc.title);
-      await Recipe.insertMany(data, { bypassDocumentValidation: false }, function (err, docs) {
-        docs.forEach((doc) => console.log(doc.title));
-      });
+      let docs = await Recipe.insertMany(data, { bypassDocumentValidation: false });
+      docs.forEach((doc) => console.log(doc.title));
     } catch (error) {
-      throw new Error(error);
+      console.log(error);
     }
     // console.log(ret);
     // return Recipe.create(data[0]);
