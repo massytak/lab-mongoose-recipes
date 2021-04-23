@@ -17,8 +17,8 @@ mongoose
   })
   .then(function (self) {
     console.log(`Connected to the database: "${self.connection.name}"`);
-    // Before adding any documents to the database, let's delete all previous entries
-    return self.connection.dropDatabase();
+    // Before adding any recipes to the database, let's remove all existing ones
+    return Recipe.remove()
   })
   .then(async function (ret) {
     try {
