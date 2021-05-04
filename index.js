@@ -40,27 +40,3 @@ mongoose
   .catch((error) => {
     console.error("Error connecting to the database", error);
   });
-// .then(async (test) => {
-//   // console.log(
-//   //   // Run your code here, after you have insured that the connection was made
-//   //   await Recipe.create(data[0]).then((ret) => {
-//   //     console.log(ret.title);
-//   //     return ret;
-//   //   })
-//   // );
-//   // console.log(data.length);
-//   // Toute les erreurs eventuel sont catcher par le catch en dessous
-//   // let docsFromInsertMany =
-//   console.log(
-//     await Recipe.insertMany(data, {
-//       bypassDocumentValidation: false,
-//     })
-//       .then((docs) => {
-//         docs.forEach((doc) => console.log(doc.title));
-//         return docs;
-//       })
-//       .catch((err) => console.log(err))
-//   );
-//   // docsFromInsertMany.forEach((doc) => console.log(doc.title));
-
-// })
